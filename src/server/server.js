@@ -33,7 +33,7 @@ app.use((err, req, res, next) => {
 io.on('connection', (socket) => {
   console.log('Got a new connection from client.')
 
-  const ip = socket.handshake.headers['X-Forwarded-For']
+  const ip = JSON.stringify(socket.handshake.headers)
 
   socket.on('color', (data) => {
     const payload = JSON.stringify({
