@@ -33,8 +33,24 @@ app.use((err, req, res, next) => {
 io.on('connection', (socket) => {
   console.log('Got a new connection from client.')
 
-  socket.on('color', (color) => {
-    client.publish('bekti_dugem_color', color)
+  const ip = socket.request.connection.remoteAddress
+
+  socket.on('color', (data) => {
+    const payload = JSON.stringify({
+      data: data,
+      ip: ip
+    })
+    
+    client.publish('bekti_dugem_color', payload)
+  })
+
+  socket.on('control', (data) => {
+    const payload = JSON.stringify({
+      data: data,
+      ip: ip
+    })
+
+    client.publish('bekti_dugem_control', payload)
   })
 })
 
