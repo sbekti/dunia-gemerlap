@@ -10,6 +10,7 @@ const server = http.Server(app)
 const io = socketio(server)
 
 const client = mqtt.connect('mqtt://test.mosquitto.org')
+let currentColor = 'ffffff'
 
 app.set('env', process.env.NODE_ENV || 'development')
 app.set('host', process.env.HOST || '0.0.0.0')
@@ -32,6 +33,7 @@ app.use((err, req, res, next) => {
 
 io.on('connection', (socket) => {
   console.log('Got a new connection from client.')
+  socket.emit('color', currentColor)
 
   const ip = socket.handshake.headers['x-forwarded-for']
   const ua = socket.handshake.headers['user-agent']
@@ -43,7 +45,9 @@ io.on('connection', (socket) => {
       ua: ua
     })
 
+    currentColor = data
     client.publish('bekti_dugem_color', payload)
+    io.emit('color', data)
   })
 
   socket.on('control', (data) => {

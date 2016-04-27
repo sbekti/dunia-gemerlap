@@ -16,7 +16,7 @@ class ColorPicker extends React.Component {
 
   render() {
     return (
-      <ChromePicker onChangeComplete={this.handleChange} />
+      <ChromePicker color={this.props.color} onChangeComplete={this.handleChange} />
     )
   }
 
