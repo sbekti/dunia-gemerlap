@@ -33,14 +33,14 @@ app.use((err, req, res, next) => {
 io.on('connection', (socket) => {
   console.log('Got a new connection from client.')
 
-  const ip = socket.request.connection.remoteAddress
+  const ip = socket.handshake.headers['X-Forwarded-For']
 
   socket.on('color', (data) => {
     const payload = JSON.stringify({
       data: data,
       ip: ip
     })
-    
+
     client.publish('bekti_dugem_color', payload)
   })
 
