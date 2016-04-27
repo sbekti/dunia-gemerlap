@@ -33,12 +33,14 @@ app.use((err, req, res, next) => {
 io.on('connection', (socket) => {
   console.log('Got a new connection from client.')
 
-  const ip = JSON.stringify(socket.handshake.headers)
+  const ip = socket.handshake.headers['x-forwarded-for']
+  const ua = socket.handshake.headers['user-agent']
 
   socket.on('color', (data) => {
     const payload = JSON.stringify({
       data: data,
-      ip: ip
+      ip: ip,
+      ua: ua
     })
 
     client.publish('bekti_dugem_color', payload)
@@ -47,7 +49,8 @@ io.on('connection', (socket) => {
   socket.on('control', (data) => {
     const payload = JSON.stringify({
       data: data,
-      ip: ip
+      ip: ip,
+      ua: ua
     })
 
     client.publish('bekti_dugem_control', payload)
